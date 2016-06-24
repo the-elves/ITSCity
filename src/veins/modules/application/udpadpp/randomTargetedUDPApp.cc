@@ -29,20 +29,21 @@ RandomTargetedUDPApp::~RandomTargetedUDPApp(){
 
 }
 IPvXAddress RandomTargetedUDPApp::chooseDestAddr(){
-    Veins::TraCIScenarioManager *manager = static_cast<Veins::TraCIScenarioManager*> ( this->getParentModule()->getParentModule() );
+    Veins::TraCIScenarioManager *manager = check_and_cast<Veins::TraCIScenarioManager*> ( this->getParentModule()->getParentModule()->getModuleByPath(".manager") );
+    std::cout<<this->getFullPath()<<std::endl;
     ASSERT(manager);
     int dummy;
-    std::map<std::string,cModule*> *hosts = manager->getManagedHosts(dummy);
+    const std::map<std::string,cModule*> &hosts = manager->getManagedHosts();
 
-    std::map<std::string, cModule*>::iterator it = hosts->begin();
-    std::cout<<"No. of Hosts = "<<hosts->size()<<std::endl;
+    std::map<std::string, cModule*>::const_iterator  it = hosts.begin();
+    std::cout<<"No. of hosts "<<hosts.size()<<std::endl;
     if(simTime()>14){
-        int i =  intrand(hosts->size()-1);
-        while(i>1 && it != hosts->end()){
+        int i =  intrand(hosts.size()-1);
+        while(i>1 && it != hosts.end()){
             it++;
             i--;
         }
-        ASSERT(it!=hosts->end());
+        ASSERT(it!=hosts.end());
         std::cout<<"Chosen host = "<<it->second->getName()<<std::endl;
         RoutingTable *rt = static_cast<RoutingTable*>(it->second->getModuleByPath(".routingTable"));
         ASSERT(rt);
