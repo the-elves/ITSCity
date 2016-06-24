@@ -1,0 +1,3 @@
+<obstacles>
+	<type id="building" db-per-cut="9" db-per-meter="0.4" />
+</obstacles>
